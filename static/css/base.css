@@ -46,8 +46,24 @@ li a:hover:not(.active) {
     padding: 40px;
 }
 
+.search-row {
+    height: 50%;
+}
+
+.autocomplete {
+    width: 100%;
+
+}
 
 .search-add {
     width: 70%;
     display: inline;
+}
+
+
+.fixed-height {
+    max-height: 150px;
+    margin-bottom: 10px;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }

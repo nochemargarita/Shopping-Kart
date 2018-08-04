@@ -1,13 +1,30 @@
 {% extends 'base.html' %}
 
 {% block body %}
-
-    <form autocomplete="on" action='/#'>
-        <div class="autocomplete">
+    <div class='row search-row'>
+        <div class="autocomplete ui-widget">
             <input type='text' id='products' class='form-control search-add' placeholder='Search for product' autofocus>
-            <input type='submit' class='btn btn-success' value='Add'>
+            <button class='btn btn-success add-product'>Add</button>
         </div>
-    </form>
+    </div>
+
+    <div class='row'>
+      <h4>MY KART</h4>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col-10">Item</th>
+            <th scope="col-2">Quantity</th>
+          </tr>
+        </thead>
+        <tbody class='add-products'>
+          <!-- the product/item will be added here -->
+        </tbody>
+      </table>
+
+
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -16,7 +33,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
     $( function() {
-
+        // AJAX calls to get all the product from the database
         let productNames = []
 
         function listProducts(results) {
@@ -33,11 +50,36 @@
           
         getProducts();
 
-        $( "#products" ).autocomplete({
-          source: productNames
+        // for the autocomplete, reference: https://jqueryui.com/autocomplete/
+        $("#products").autocomplete({
+          source: productNames,
+          autoFocus: true
+
         });
 
+        $( "#products" ).autocomplete("widget").addClass("fixed-height");
+
     });
+
+    // Event listener for adding product.
+    $('.add-product').click(function(evt){
+        evt.preventDefault();
+        let product = $('#products').val().split(" ").join('-');
+        let quantity = Number($('#'+product).html()) + 1;
+        
+        if ($('tr').hasClass(product)){
+          $('#'+product).html(quantity);
+          quantity++;
+            
+        } else {
+          $('tbody').append(`<tr class=${product}>
+                              <th scope="row">${$('#products').val()}</th>
+                              <td id=${product}>1</td>
+                             </tr>`);
+        }
+
+    });
+
     </script>
 
 

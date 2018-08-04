@@ -23,7 +23,6 @@ def homepage():
 @app.route('/signup', methods=['POST'])
 def sign_up():
     """Process sign-up using POST request."""
-    print 'getting there'
     first_name = request.form['first_name']
     last_name = request.form['last_name']
     email = request.form['email']
@@ -81,7 +80,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    """Clear session."""
+    """Clear customer from session."""
 
     session.clear()
 
