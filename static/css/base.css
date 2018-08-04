@@ -41,3 +41,13 @@ li a:hover:not(.active) {
     background-color: #3f4240; 
     height: 100vh;
 }
+
+.col-10 {
+    padding: 40px;
+}
+
+
+.search-add {
+    width: 70%;
+    display: inline;
+}

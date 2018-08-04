@@ -13,6 +13,7 @@ class Customer(db.Model):
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(200), nullable=False)
+    password = db.Column(db.String(200), nullable=False)
     phone = db.Column(db.String(10), nullable=True)
     address = db.Column(db.String(250), nullable=True)
 
@@ -60,6 +61,7 @@ class Cart(db.Model):
 
 def connect_to_db(app):
     """Connect the database to Flask app."""
+    
     app.config["SQLALCHEMY_DATABASE_URI"] = "PostgreSQL:///kart"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app

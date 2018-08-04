@@ -1,11 +1,14 @@
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, flash, session, request
+from model import connect_to_db, db, Customer, Product, Cart
+from werkzeug.security import generate_password_hash, check_password_hash
 # from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
 
 app.secret_key = "ABC"
 app.jinja_env.undefined = StrictUndefined
+
 
 @app.route('/')
 def homepage():
@@ -17,15 +20,18 @@ def homepage():
         return render_template('homepage.html')
 
 
-@app.route('/sign-up', methods=['POST'] )
-def sign_up_form():
+@app.route('/signup', methods=['POST'])
+def sign_up():
     """Process sign-up using POST request."""
+    print 'getting there'
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    email = request.form['email']
+    password = request.form['password']
+    phone = request.form['phone']
+    address = request.form['address']
 
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
-    email = request.form.get('email')
-    phone = request.form.get('phone')
-    address = request.form.get('address')
+    hashed_password = generate_password_hash(password)
 
     already_customer = db.session.query(Customer).filter(Customer.email == email).first()
 
@@ -37,6 +43,7 @@ def sign_up_form():
         customer = Customer(first_name=first_name,
                             last_name=last_name,
                             email=email,
+                            password=hashed_password,
                             phone=phone,
                             address=address)
 
@@ -46,7 +53,41 @@ def sign_up_form():
 
     return render_template('kart.html')
 
+
+@app.route('/login', methods=['POST'])
+def login():
+    """Process customer's entered email and password and confirm."""
+
+    email = request.form['email']
+    password = request.form['password']
+
+    already_customer = db.session.query(Customer).filter(Customer.email == email).first()
+
+    if already_customer:
+        checked_hashed = check_password_hash(already_customer.password, password)
+        if checked_hashed:
+            name = already_customer.first_name.capitalize()
+            flash('Welcome to Kart, {}!'.format(name))
+            session['email'] = email
+            return render_template('kart.html')
+        else:
+            flash('Your password didn\'t match the email')
+            return redirect('/')
+
+    else:
+        flash('Please check your email and password.')
+        return redirect('/')
+
+
+@app.route('/kart')
+def kart():
+    """Search for products/items."""
+    return render_template('kart.html')
+
 if __name__ == "__main__":
+    connect_to_db(app)
+    app.config["SQLALCHEMY_DATABASE_URI"] = "PostgreSQL:///kart"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.debug = True
     app.jinja_env.auto_reload = app.debug
     app.run(host='0.0.0.0')
