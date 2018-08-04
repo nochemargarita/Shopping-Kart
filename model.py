@@ -60,6 +60,8 @@ class Cart(db.Model):
 
 def connect_to_db(app):
     """Connect the database to Flask app."""
+    app.config["SQLALCHEMY_DATABASE_URI"] = "PostgreSQL:///kart"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
 
