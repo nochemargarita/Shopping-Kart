@@ -14,6 +14,7 @@ def products_to_db(filename):
 
     print 'Now committing!'
     db.session.commit()
+    print 'Committed!'
 
 
 if __name__ == "__main__":

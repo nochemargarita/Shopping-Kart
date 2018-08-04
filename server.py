@@ -1,5 +1,5 @@
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, redirect, flash, session, request
+from flask import Flask, render_template, redirect, flash, session, request, jsonify
 from model import connect_to_db, db, Customer, Product, Cart
 from werkzeug.security import generate_password_hash, check_password_hash
 # from flask_debugtoolbar import DebugToolbarExtension
@@ -79,10 +79,31 @@ def login():
         return redirect('/')
 
 
+@app.route('/logout')
+def logout():
+    """Clear session."""
+
+    session.clear()
+
+    return redirect('/')
+
+
 @app.route('/kart')
 def kart():
     """Search for products/items."""
     return render_template('kart.html')
+
+
+@app.route('/products.json')
+def get_products():
+    products = db.session.query(Product).all()
+    product_details = {}
+
+    for product in products:
+        product_details[product.product_id] = product.name
+
+    return jsonify(product_details)
+
 
 if __name__ == "__main__":
     connect_to_db(app)

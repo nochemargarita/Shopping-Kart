@@ -20,6 +20,11 @@
             <div class='col-2 navigation-bar'>
                 <ul>
                     <li><a class="active" href="/">Home</a></li>
+                    {% if 'email' in session %}
+                        <li><a class="active" href="/logout">Log out</a></li>
+                    {% endif %}
+
+
                 </ul>
             </div>
             <div class='col-10'>
