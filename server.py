@@ -116,10 +116,11 @@ def cart_product():
 
     if email:
         chosen = request.form.get('data')
-
+        print chosen
         for name, quantity in json.loads(chosen).iteritems():
             product = Kart()
             product.add_to_cart(email, name, quantity)
+            product.update_kart(email, name, quantity)
 
         return 'See you next time! Your items will wait for you.'
     else:
