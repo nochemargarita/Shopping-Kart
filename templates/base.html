@@ -23,10 +23,8 @@
                 <ul>
                     <li><a class="active" href="/">Home</a></li>
                     {% if 'email' in session %}
-                        <li><a class="active" href="/logout">Log out</a></li>
+                        <li><a class="active logout" href="/logout">Log out</a></li>
                     {% endif %}
-
-
                 </ul>
             </div>
             <div class='col-10 bg-light'>
@@ -34,8 +32,6 @@
                 {% endblock %}
             </div>
         </div>
-
     </div>
-
 </body>
 </html>

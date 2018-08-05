@@ -3,6 +3,8 @@ from flask import Flask, render_template, redirect, flash, session, request, jso
 from model import connect_to_db, db, Customer, Product, Cart
 from werkzeug.security import generate_password_hash, check_password_hash
 # from flask_debugtoolbar import DebugToolbarExtension
+from kart import Kart
+import json
 
 app = Flask(__name__)
 
@@ -93,8 +95,9 @@ def kart():
     return render_template('kart.html')
 
 
-@app.route('/products.json')
+@app.route('/suggestions.json')
 def get_products():
+    """get all product suggestions from db."""
     products = db.session.query(Product).all()
     product_details = {}
 
@@ -103,6 +106,17 @@ def get_products():
 
     return jsonify(product_details)
 
+
+@app.route('/kartItem', methods=['POST'])
+def cart_product():
+    email = session['email']
+    chosen = request.form.get('data')
+
+    for name, quantity in json.loads(chosen).iteritems():
+        product = Kart()
+        product.add_product(email, name, quantity)
+
+    return 'See you next time! Your items will wait for you.'
 
 if __name__ == "__main__":
     connect_to_db(app)

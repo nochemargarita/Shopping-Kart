@@ -45,9 +45,11 @@ class Cart(db.Model):
     __tablename__ = "carts"
 
     cart_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey("customers.customer_id"), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey("products.product_id"), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
 
+    customer = db.relationship('Customer', backref=db.backref('carts', order_by=cart_id))
     product = db.relationship('Product', backref=db.backref('carts', order_by=cart_id))
 
     def __repr__(self):

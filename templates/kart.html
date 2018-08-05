@@ -48,7 +48,7 @@
         };
 
         function getProducts() {
-            $.get('/products.json', listProducts);
+            $.get('/suggestions.json', listProducts);
         };
           
         getProducts();
@@ -65,6 +65,7 @@
     });
 
     // Event listener for adding product.
+    let productAndQuantity = {}
     $('.add-product').click(function(evt){
         evt.preventDefault();
         let product = $('#products').val().split(" ").join('-');
@@ -73,29 +74,45 @@
         let removeButton = `<button class=${product}-remove><i class="fas fa-minus"></i></button>`
 
         if ($('tr').hasClass(product)){
-          $('#'+product).html(Number($('#'+product).html()) + 1);          
+          $('#'+product).html(Number($('#'+product).html()) + 1);
+          productAndQuantity[$('#products').val()] += 1         
         } else {
           $('tbody').append(`<tr class=${product}>
-                              <th scope="row">${$('#products').val()}</th>
+                              <th class='product-name' scope="row">${$('#products').val()}</th>
                               <td id=${product}> 1 </td>
                               <td>${removeButton} &nbsp; ${addButton}</td>
                              </tr>`);
+          productAndQuantity[$('#products').val()] = 1
         }
-        
+        // adding and removing products from the cart using minus and plus icons.
         $('.'+product+'-add').unbind('click').click(function(evt){
           evt.preventDefault();
           $('#'+product).html(Number($('#'+product).html()) + 1);
+          productAndQuantity[$('#products').val()] += 1
         });
 
         $('.'+product+'-remove').unbind('click').click(function(evt){
           evt.preventDefault();
           if (Number($('#'+product).html() > 1)){
             $('#'+product).html(Number($('#'+product).html()) - 1)
+            productAndQuantity[$('#products').val()] -= 1
           } else {
             $('.'+product).remove();
+            productAndQuantity[$('#products').val()] -= 1
           } 
         });
     });
+
+    function alerCustomer(result) {
+        alert(result);
+    }
+
+    $('.logout').click(function(evt){
+        evt.preventDefault();
+        let cartProducts = {data: JSON.stringify(productAndQuantity)};
+        $.post('/kartItem', cartProducts, alerCustomer);
+    });
+    
 
   });  
 
