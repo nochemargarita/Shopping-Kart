@@ -146,11 +146,13 @@ def get_cart_product():
     else:
         return redirect('/')
 
-
+# db.init_app(app)
 if __name__ == "__main__":
-    app.debug = True
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-    DebugToolbarExtension(app)
+    # app.debug = False
+    
+    # DebugToolbarExtension(app)
     app.jinja_env.auto_reload = app.debug
+    # db.init_app(app)
     connect_to_db(app)
     app.run(host='0.0.0.0')

@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash
 
 db = SQLAlchemy()
 
@@ -59,13 +60,22 @@ class Cart(db.Model):
                 self.cart_id, self.product_id, self.quantity)
 
 
+def connect_to_db(app, db_uri='postgresql:///kart'):
+    """Connect db to flask app."""
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    db.app = app
+    db.init_app(app)
+
 def example_data():
     """Data for testing."""
 
     customer = Customer(first_name='John',
                         last_name='Doe',
-                        email='sp@y',
-                        password='123',
+                        email='email',
+                        password=generate_password_hash('123'),
                         phone='1234567891',
                         address='California'
                         )
@@ -77,24 +87,15 @@ def example_data():
                 quantity=3)
 
     db.session.add(customer)
+    db.session.commit()
     db.session.add(product)
+    db.session.commit()
     db.session.add(cart)
 
     db.session.commit()
 
 
-##############################################################################
-
-def connect_to_db(app, db_uri='postgresql:///testdb'):
-    """Connect the database to Flask app."""
-
-    app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
-    db.app = app
-    db.init_app(app)
-
-
 if __name__ == "__main__":
     from server import app
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     connect_to_db(app)
-    print("Connected to DB.")
+    print 'Connected to DB'
