@@ -16,7 +16,7 @@ app.jinja_env.undefined = StrictUndefined
 def homepage():
     """Return homepage."""
     if session.get('email'):
-        return redirect('/kart')
+        return redirect('/shop')
 
     else:
         return render_template('homepage.html')
@@ -52,7 +52,7 @@ def sign_up():
         db.session.commit()
         session['email'] = email
 
-    return render_template('kart.html')
+    return render_template('shop.html')
 
 
 @app.route('/login', methods=['POST'])
@@ -70,7 +70,7 @@ def login():
             name = already_customer.first_name.capitalize()
             flash('Welcome to Kart, {}!'.format(name))
             session['email'] = email
-            return render_template('kart.html')
+            return render_template('shop.html')
         else:
             flash('Your password didn\'t match the email')
             return redirect('/')
@@ -89,13 +89,16 @@ def logout():
     return redirect('/')
 
 
-@app.route('/kart')
-def kart():
+@app.route('/shop')
+def shop():
     """Search for products/items."""
-    return render_template('kart.html')
+    if session.get('email'):
+        return render_template('shop.html')
+    else:
+        return redirect('/')
 
 
-@app.route('/suggestions.json')
+@app.route('/suggestions')
 def get_products():
     """get all product suggestions from db."""
     products = db.session.query(Product).all()
@@ -109,14 +112,38 @@ def get_products():
 
 @app.route('/kartItem', methods=['POST'])
 def cart_product():
-    email = session['email']
-    chosen = request.form.get('data')
+    email = session.get('email')
 
-    for name, quantity in json.loads(chosen).iteritems():
-        product = Kart()
-        product.add_product(email, name, quantity)
+    if email:
+        chosen = request.form.get('data')
 
-    return 'See you next time! Your items will wait for you.'
+        for name, quantity in json.loads(chosen).iteritems():
+            product = Kart()
+            product.add_to_cart(email, name, quantity)
+
+        return 'See you next time! Your items will wait for you.'
+    else:
+        return redirect('/')
+
+
+@app.route('/kart')
+def get_cart_product():
+    """Get all the product from the cart associated with the customer."""
+    email = session.get('email')
+    if email:
+        customer = db.session.query(Customer).filter(Customer.email == email).first()
+
+        products = {}
+
+        cart = db.session.query(Cart).filter(Cart.customer_id == customer.customer_id).all()
+
+        for product in cart:
+            products[product.product.name] = product.quantity
+
+        return jsonify(products)
+    else:
+        return redirect('/')
+
 
 if __name__ == "__main__":
     connect_to_db(app)

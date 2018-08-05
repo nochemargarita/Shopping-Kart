@@ -3,7 +3,7 @@ from model import connect_to_db, db, Customer, Product, Cart
 
 class Kart(object):
 
-    def add_product(self, email, name, quantity):
+    def add_to_cart(self, email, name, quantity):
         """Adds the product to db."""
         self.name = name
         self.quantity = quantity
@@ -16,6 +16,8 @@ class Kart(object):
 
         db.session.add(cart)
         db.session.commit()
+
+    
 
 
 if __name__ == "__main__":
