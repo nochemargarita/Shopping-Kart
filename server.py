@@ -9,6 +9,7 @@ import json
 app = Flask(__name__)
 
 app.secret_key = "ABC"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -147,9 +148,9 @@ def get_cart_product():
 
 
 if __name__ == "__main__":
-    connect_to_db(app)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "PostgreSQL:///kart"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.debug = True
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+    DebugToolbarExtension(app)
     app.jinja_env.auto_reload = app.debug
+    connect_to_db(app)
     app.run(host='0.0.0.0')

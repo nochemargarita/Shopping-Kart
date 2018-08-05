@@ -59,19 +59,42 @@ class Cart(db.Model):
                 self.cart_id, self.product_id, self.quantity)
 
 
+def example_data():
+    """Data for testing."""
+
+    customer = Customer(first_name='John',
+                        last_name='Doe',
+                        email='sp@y',
+                        password='123',
+                        phone='1234567891',
+                        address='California'
+                        )
+
+    product = Product(name='potato')
+
+    cart = Cart(customer_id=1,
+                product_id=1,
+                quantity=3)
+
+    db.session.add(customer)
+    db.session.add(product)
+    db.session.add(cart)
+
+    db.session.commit()
+
+
 ##############################################################################
 
-def connect_to_db(app):
+def connect_to_db(app, db_uri='postgresql:///testdb'):
     """Connect the database to Flask app."""
-    
-    app.config["SQLALCHEMY_DATABASE_URI"] = "PostgreSQL:///kart"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
     db.app = app
     db.init_app(app)
 
 
 if __name__ == "__main__":
-
     from server import app
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     connect_to_db(app)
     print("Connected to DB.")
