@@ -86,7 +86,7 @@ def logout():
     """Clear customer from session."""
 
     session.clear()
-
+    flash('See you next time!')
     return redirect('/')
 
 
@@ -122,8 +122,8 @@ def cart_product():
             product = Kart()
             product.add_to_cart(email, name, quantity)
             product.update_kart(email, name, quantity)
-
         return 'See you next time! Your items will wait for you.'
+
     else:
         return redirect('/')
 
@@ -134,15 +134,13 @@ def get_cart_product():
     email = session.get('email')
     if email:
         customer = db.session.query(Customer).filter(Customer.email == email).first()
-
+        cart = db.session.query(Cart).filter(Cart.customer_id == customer.customer_id).all()        
         products = {}
-
-        cart = db.session.query(Cart).filter(Cart.customer_id == customer.customer_id).all()
 
         for product in cart:
             products[product.product.name] = product.quantity
-
         return jsonify(products)
+
     else:
         return redirect('/')
 

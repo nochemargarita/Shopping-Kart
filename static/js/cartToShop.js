@@ -11,8 +11,8 @@ $(document).ready(function() {
           
           $('tbody').append(`<tr class=${forClassUse}>
                               <th class='product-name' scope="row">${product}</th>
-                              <td id=${forClassUse}> ${cartProduct[product]} </td>
-                              <td>${removeButton} &nbsp; ${addButton}</td>
+                              <td class='text-center' id=${forClassUse}> ${cartProduct[product]} </td>
+                              <td class='text-center'>${removeButton} &nbsp; ${addButton}</td>
                              </tr>`);
 
           $('.'+forClassUse+'-add').unbind('click').click(function(evt){

@@ -41,8 +41,8 @@ $(document).ready(function() {
         } else {
           $('tbody').append(`<tr class=${product}>
                               <th class='product-name' scope="row">${$('#products').val()}</th>
-                              <td id=${product}> 1 </td>
-                              <td>${removeButton} &nbsp; ${addButton}</td>
+                              <td class='text-center' id=${product}> 1 </td>
+                              <td class='text-center'>${removeButton} &nbsp; ${addButton}</td>
                              </tr>`);
           productAndQuantity[$('#products').val()] = 1
         }

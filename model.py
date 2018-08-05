@@ -87,15 +87,15 @@ def example_data():
                 quantity=3)
 
     db.session.add(customer)
-    db.session.commit()
+    # db.session.commit()
     db.session.add(product)
-    db.session.commit()
+    # db.session.commit()
     db.session.add(cart)
-
     db.session.commit()
 
-
+from server import app
+connect_to_db(app)
+print 'Connected to DB'
 if __name__ == "__main__":
-    from server import app
-    connect_to_db(app)
-    print 'Connected to DB'
+    pass
+
